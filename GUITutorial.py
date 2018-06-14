@@ -4,8 +4,9 @@
 # -*- coding: utf-8 -*- #Necessary?
 
 import sys #Necessary?
+import os
 #from PyQt5.QtCore import QDate, QTime, QDateTime, Qt #Why should "Qt" be imported? What does it stand for?
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QToolTip, QLabel, QComboBox, QTextEdit, QFileDialog, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QToolTip, QLabel, QComboBox, QTextEdit, QFileDialog, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QFont
 
 """
@@ -37,17 +38,26 @@ def small_window():
             self.runButton.setToolTip('Press to run the test')
             self.saveButton = QPushButton('Save')
             self.saveButton.setToolTip('Press to save the changes')
+            self.openButton = QPushButton('Open')
+            self.openButton.setToolTip('Press to open text file')
 
             self.initUI()
 
         def initUI(self):
-            layout = QVBoxLayout()
-            layout.addWidget(self.text)
-            layout.addWidget(self.clearButton)
+            vLayout = QVBoxLayout()
+            hLayout = QHBoxLayout()
+
+            vLayout.addWidget(self.openButton)
+            self.openButton.clicked.connect(self.open_text)
+            vLayout.addWidget(self.text)
+            hLayout.addWidget(self.clearButton)
             self.clearButton.clicked.connect(self.clear_text)
-            layout.addWidget(self.runButton)
-            layout.addWidget(self.saveButton)
+            hLayout.addWidget(self.runButton)
+            hLayout.addWidget(self.saveButton)
             self.saveButton.clicked.connect(self.save_text)
+
+            vLayout.addLayout(hLayout)
+
             QToolTip.setFont(QFont('SansSerif', 10)) #Sets the font for the Tooltip elements (the text explaining the function of a widget by popping up when hovering
 
 
@@ -73,7 +83,7 @@ def small_window():
             self.lbl.move(50,150)
             dropDown.activated[str].connect(self.on_activated)
 
-            self.setLayout(layout)
+            self.setLayout(vLayout)
             #self.setGeometry(300,300,300,220)
             self.setWindowTitle('GUI')
             self.show()
@@ -87,9 +97,16 @@ def small_window():
             self.text.clear()
 
         def save_text(self):
-            with open('text.txt', 'w') as f:
+            filename = QFileDialog.getSaveFileName(self, 'Save file', os.getenv('HOME'))
+            with open(filename[0], 'w') as f:
                 my_text = self.text.toPlainText()
                 f.write(my_text)
+
+        def open_text(self):
+            filename = QFileDialog.getOpenFileName(self, 'Open file', os.getenv('HOME'))
+            with open(filename[0], 'r') as f:
+                file_text = f.read()
+                self.text.setText(file_text)
 
 
     app = QApplication(sys.argv) #Creates an application object. sys.argv is a list of command line arguments.
