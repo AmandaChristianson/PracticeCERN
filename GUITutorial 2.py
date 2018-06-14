@@ -5,7 +5,7 @@
 
 import sys #Necessary?
 #from PyQt5.QtCore import QDate, QTime, QDateTime, Qt #Why should "Qt" be imported? What does it stand for?
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QToolTip, QLabel, QComboBox, QTextEdit, QFileDialog, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QToolTip, QLabel, QComboBox, QTextEdit, QFileDialog
 from PyQt5.QtGui import QFont
 
 """
@@ -29,39 +29,28 @@ def small_window():
     class Window(QWidget):
 
         def __init__(self):
-            super(Window, self).__init__()
+            super().__init__()
 
             self.text = QTextEdit(self) #To enable the text editor
-            self.clearButton = QPushButton('Clear') #Clears a document
-            self.runButton = QPushButton('Run')
-            self.runButton.setToolTip('Press to run the test')
-            self.saveButton = QPushButton('Save')
-            self.saveButton.setToolTip('Press to save the changes')
+            self.
 
             self.initUI()
 
         def initUI(self):
-            layout = QVBoxLayout()
-            layout.addWidget(self.text)
-            layout.addWidget(self.clearButton)
-            self.clearButton.clicked.connect(self.clear_text)
-            layout.addWidget(self.runButton)
-            layout.addWidget(self.saveButton)
-            self.saveButton.clicked.connect(self.save_text)
+
             QToolTip.setFont(QFont('SansSerif', 10)) #Sets the font for the Tooltip elements (the text explaining the function of a widget by popping up when hovering
 
-
             #Run button
-            #buttonRun = QPushButton('Run', self) #Creates a pushbutton
-            #buttonRun.setToolTip('Press to run the test') #Sets the Tooltip for the button
-            #buttonRun.resize(buttonRun.sizeHint()) #Results in a recommended size for the button
-            #buttonRun.move(100,50) #Moves the button
+            buttonRun = QPushButton('Run', self) #Creates a pushbutton
+            buttonRun.setToolTip('Press to run the test') #Sets the Tooltip for the button
+            buttonRun.resize(buttonRun.sizeHint()) #Results in a recommended size for the button
+            buttonRun.move(100,50) #Moves the button
 
             #Save button
-            #buttonSave = QPushButton('Save', self) #Creates a pushbutton
-            #buttonSave.setToolTip('Press to save your changes') #Sets the Tooltip för the button
-            #buttonSave.resize(buttonSave.sizeHint()) #Results in a recommended size for the button
-            #buttonSave.move(25,50) #Moves the button
+            buttonSave = QPushButton('Save', self) #Creates a pushbutton
+            buttonSave.setToolTip('Press to save your changes') #Sets the Tooltip för the button
+            buttonSave.resize(buttonSave.sizeHint()) #Results in a recommended size for the button
+            buttonSave.move(25,50) #Moves the button
 
             #Dropdown menu
             self.lbl = QLabel('Files', self)
@@ -73,23 +62,19 @@ def small_window():
             self.lbl.move(50,150)
             dropDown.activated[str].connect(self.on_activated)
 
-            self.setLayout(layout)
-            #self.setGeometry(300,300,300,220)
+            self.setGeometry(300,300,300,220)
             self.setWindowTitle('GUI')
             self.show()
+
+            #File dialog
+            self.fileDialog = QtGui.QFileDialog(self)
+            self.fileDialog.show()
 
         def on_activated(self, text):
             self.lbl.setText(text)
             self.lbl.adjustSize()
 
             #Editor
-        def clear_text(self):
-            self.text.clear()
-
-        def save_text(self):
-            with open('text.txt', 'w') as f:
-                my_text = self.text.toPlainText()
-                f.write(my_text)
 
 
     app = QApplication(sys.argv) #Creates an application object. sys.argv is a list of command line arguments.
